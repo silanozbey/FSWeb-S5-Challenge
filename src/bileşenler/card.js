@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const Card = (makale) => {
   // GÖREV 5
   // ---------------------
@@ -16,8 +18,26 @@ const Card = (makale) => {
   //     <span>{ yazarAdı } tarafından</span>
   //   </div>
   // </div>
-  //
-}
+
+  const divCard = document.createElement("div");
+  divCard.classList.add("card");
+
+  divCard.innerHTML = `
+     <div class="headline">${makale.anabaslik}</div>
+      <div class="author">
+        <div class="img-container">
+          <img src= ${makale.yazarFoto}>
+        </div>
+        <span>from ${makale.yazarAdi}</span>
+      </div>
+    </div>`;
+
+  divCard.addEventListener("click", function () {
+    console.log(makale.anabaslik);
+  });
+
+  return divCard;
+};
 
 const cardEkleyici = (secici) => {
   // GÖREV 6
@@ -28,6 +48,16 @@ const cardEkleyici = (secici) => {
   // Card bileşenini kullanarak yanıttaki her makale nesnesinden bir kart oluşturun.
   // Her cardı, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
   //
-}
 
-export { Card, cardEkleyici }
+  axios.get("http://localhost:5001/api/makaleler").then(function (response) {
+    //console.log(response.data);
+
+    for (let i in response.data.makaleler) {
+      response.data.makaleler[i].forEach(function (makale) {
+        document.querySelector(secici).appendChild(Card(makale));
+      });
+    }
+  });
+};
+
+export { Card, cardEkleyici };
